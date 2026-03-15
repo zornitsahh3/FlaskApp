@@ -1,14 +1,11 @@
 from sqlalchemy import create_engine, text
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-engine = create_engine("postgresql+psycopg2://todo_user:password@localhost:5432/todo_db")
+DATABASE_URL="sqlite:///./todo.db"
 
-with engine.connect() as conn:
-    conn.execute(text("""
-        CREATE TABLE IF NOT EXISTS todos (
-            id SERIAL PRIMARY KEY,
-            name TEXT
-        )
-    """))
+engine = create_engine(DATABASE_URL,connect_args={"check_same_thread":False})
 
-    conn.execute(text("INSERT INTO users (name) VALUES ('Alice')"))
-    conn.commit()
+SessionLocal=sessionmaker(bind=engine,autoflush=False,autocommit=False)
+
+Base=declarative_base()
